@@ -83,7 +83,7 @@
                 <div class="title m-b-md">
                     MyLog
                 </div>
-
+{{--sdaasd--}}
                 Jacob Balabanov Logging - Under Construction
             </div>
         </div>
