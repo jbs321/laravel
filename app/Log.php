@@ -6,12 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model
 {
-    protected $table = 'log';
+    protected $table = 'logs';
 
     protected $fillable = [
         'description',
-        'category',
+        'category_id',
         'amount',
+        'retailer',
         'datetime',
     ];
+
+    public function category()
+    {
+        return $this->hasOne('App\Category');
+    }
 }

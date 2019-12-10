@@ -20,3 +20,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/log', 'LogController@index');
 Route::post('/log', 'LogController@post')->name('log');
+Route::get('/dashboard', 'LogController@showDashboard')->name('dashboard')->middleware('auth');
