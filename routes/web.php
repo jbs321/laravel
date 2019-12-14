@@ -10,14 +10,19 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/log', 'LogController@index');
-Route::post('/log', 'LogController@post')->name('log');
-Route::get('/dashboard', 'LogController@showDashboard')->name('dashboard')->middleware('auth');
+
+Route::middleware(['auth'])->group(function () {
+    //API - ROUTES TEMPORARY
+    Route::post('/logs/annual-summary', 'LogController@showDashboard');
+    Route::post('/import', 'ImportController@import');
+
+
+    //Navigate to react router
+    Route::get( '/{any}', function () {
+        return view('home');
+    })->where('any', '.*');
+});
+
+

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Log;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,26 +24,68 @@ class LogController extends Controller
 
     public function showDashboard()
     {
-        $logs = DB::table('logs')
-            ->select([
-                'category_id',
-                DB::raw('extract(month from datetime) as month'),
-                DB::raw("sum(amount) as amount")
-            ])
-            ->where('user_id', Auth::user()->id)
-            ->orderBy('category_id')
-            ->orderBy(DB::raw('extract(month from datetime)'))
-            ->groupBy([DB::raw("extract(month from datetime)"), 'category_id'])
-            ->get()
-            ->map(function (\stdClass $row) {
-                return (array) $row;
-            })
-            ->extract2dColumn('category_id');
+        $sql = "
+            SELECT * FROM crosstab(
+            '
+               select c.name,
+                      extract(month from l.datetime) as month,
+                      sum(l.amount)                  as amount
+               from logs l
+               left join categories c on l.category_id = c.id
+               where
+               extract(year from l.datetime) = 2019
+               group by c.name, extract(month from l.datetime)
+               order by c.name, extract(month from l.datetime)
+            ') AS logs(
+                  name character varying,
+                  January numeric,
+                  February numeric,
+                  March numeric,
+                  April numeric,
+                  May numeric,
+                  June numeric,
+                  July numeric,
+                  August numeric,
+                  September numeric,
+                  October numeric,
+                  November numeric,
+                  December numeric);";
 
-        foreach ($logs as &$log) {
-            $log = array_combine(array_column($log, 'month'), $log);
-        }
+        $pivotSummary = DB::select($sql);
 
-        return view('dashboard', compact('logs'));
+        $pivotSummary = array_map(function (\stdClass $cls) {
+            $values = array_values((array)$cls);
+
+            $values = array_map(function ($val) {
+                if (is_null($val)) {
+                    return 0;
+                }
+
+                return $val;
+            }, $values);
+
+            return $values;
+        }, $pivotSummary);
+
+        $response = [
+            'data' => $pivotSummary,
+            'headers' => [
+                'Category',
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ],
+        ];
+
+        return new JsonResponse($response);
     }
 }
