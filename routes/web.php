@@ -16,8 +16,13 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     //API - ROUTES TEMPORARY
     Route::post('/logs/annual-summary', 'LogController@showDashboard');
-    Route::post('/import', 'ImportController@import');
+    Route::middleware(\App\Http\Middleware\FilesToArrays::class)->post('/import', 'ImportController@import');
 
+
+    Route::get('/api/category', 'CategoryController@index');
+    Route::post('/api/category', 'CategoryController@create');
+    Route::post('/api/category/delete/{Category}', '
+    @delete');
 
     //Navigate to react router
     Route::get( '/{any}', function () {

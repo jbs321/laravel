@@ -1,13 +1,16 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Field, reduxForm} from 'redux-form';
+import {reduxForm} from 'redux-form';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import {importFile} from 'actions/import';
+import {withStyles} from '@material-ui/core/styles';
 
-const FileInput = (props) => (
-    <input type="file" name="file-input" multiple {...props} />
-);
+const classes = {
+    header: {
+        margin: "10px auto",
+        fontSize: "4vw",
+    }
+};
 
 class Import extends React.Component {
     constructor(props) {
@@ -16,25 +19,9 @@ class Import extends React.Component {
         this.fileChangedHandler = this.fileChangedHandler.bind(this);
     }
 
-    renderField(field) {
-        return (
-            <div>
-                <span>{field.label}</span>
-                <TextField {...field.input} />
-            </div>
-        );
-    }
-
-    renderFileField(field) {
-        return (
-            <div>
-                <span>{field.label}</span>
-                <input id="file" name="file" type="file"/>
-            </div>
-        );
-    }
-
     onSubmit(data) {
+        if(undefined === this.state.file) return;
+
         data['file'] = this.state.file;
         this.props.importFile(data);
     }
@@ -44,35 +31,24 @@ class Import extends React.Component {
     };
 
     render() {
-        const {handleSubmit} = this.props;
+        const {handleSubmit, classes: {header}} = this.props;
 
         return (
             <div className="page page-import container">
+                <div className={header}>Import RBC Bank Statement (.csv format)</div>
                 <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-                    <Field name="name" label="Name" component={this.renderField}/>
-                    <input name="file" type="file" onChange={this.fileChangedHandler}/>
-                    <Button type="submit" variant="contained" color="primary">Primary</Button>
+                    <div>
+                        <input accept=".csv" name="file" type="file" onChange={this.fileChangedHandler}/>
+                        <Button type="submit" variant="contained" color="primary">Import</Button>
+                    </div>
                 </form>
             </div>
         );
     }
 }
 
-function validate(values) {
-    const errors = {};
-
-    // if (!values.email) {
-    //     errors.email = 'Missing Email';
-    // }
-
-    return errors;
-}
-
 function mapStateToProps(state) {
     return state;
 }
 
-export default reduxForm({
-    validate,
-    form: 'importForm'
-})(connect(mapStateToProps, {importFile})(Import));
+export default reduxForm({form: 'importForm'})(connect(mapStateToProps, {importFile})(withStyles(classes)(Import)));
