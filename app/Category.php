@@ -19,9 +19,4 @@ class Category extends Model
     {
         return Crypt::encryptString($value);
     }
-
-    public function setIdAttribute($value)
-    {
-        return Crypt::decryptString($value);
-    }
 }

@@ -21,8 +21,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/api/category', 'CategoryController@index');
     Route::post('/api/category', 'CategoryController@create');
-    Route::post('/api/category/delete/{Category}', '
-    @delete');
+    Route::post('/api/category/delete/{category}', 'CategoryController@delete');
 
     //Navigate to react router
     Route::get( '/{any}', function () {

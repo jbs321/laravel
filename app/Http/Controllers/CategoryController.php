@@ -33,4 +33,17 @@ class CategoryController extends Controller
         $category->delete();
         return json_encode(['action' => 'success']);
     }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:50|unique:categories,name',
+        ]);
+
+        $category = new Category;
+        $category->fill($request->all());
+        $category->save();
+
+        return json_encode($category);
+    }
 }

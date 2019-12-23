@@ -1,11 +1,17 @@
 import React from 'react';
 import MaterialTable from "material-table";
 import {connect} from "react-redux";
-import {fetchCategories, createCategory, deleteCategory} from "../actions/categories";
+import {fetchCategories, createCategory, deleteCategory, updateCategory} from "actions/categories";
 
 const columns = [
     {title: 'Name', field: 'name'},
 ];
+
+const fakePromise = new Promise(resolve => {
+    setTimeout(() => {
+        resolve();
+    }, 600);
+});
 
 class CategoryList extends React.Component {
     constructor(props) {
@@ -21,38 +27,21 @@ class CategoryList extends React.Component {
     }
 
     handleUpdate(newData, oldData) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve();
-                if (oldData) {
-                    this.setState(prevState => {
-                        const data = [...prevState.data];
-                        data[data.indexOf(oldData)] = newData;
-                        return {...prevState, data};
-                    });
-                }
-            }, 600);
-        });
+        this.props.updateCategory(newData);
+
+        return fakePromise;
     }
 
     handleCreate(newData) {
         this.props.createCategory(newData);
 
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve();
-            }, 600);
-        });
+        return fakePromise;
     }
 
     handleDelete(oldData) {
         this.props.deleteCategory(oldData);
 
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve();
-            }, 600);
-        });
+        return fakePromise;
     }
 
     render() {
@@ -60,6 +49,9 @@ class CategoryList extends React.Component {
             <MaterialTable
                 title="Category List"
                 columns={columns}
+                options={{
+                    pageSize:10
+                }}
                 data={this.props.categories}
                 editable={{
                     onRowAdd: this.handleCreate,
@@ -76,4 +68,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, {createCategory, fetchCategories, deleteCategory})(CategoryList);
+export default connect(mapStateToProps, {createCategory, fetchCategories, deleteCategory, updateCategory})(CategoryList);
