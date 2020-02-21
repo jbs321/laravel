@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::all(['id', 'name'])->keyBy('name')->sortBy('name')->values();
         return new JsonResponse($categories);
     }
 

@@ -2,11 +2,14 @@
 
 namespace App;
 
+use App\Traits\IdEncrypterTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 
 class Category extends Model
 {
+    use IdEncrypterTrait;
+
     public $timestamps = false;
 
     protected $table = 'categories';
@@ -14,9 +17,4 @@ class Category extends Model
     protected $fillable = [
         'name'
     ];
-
-    public function getIdAttribute($value)
-    {
-        return Crypt::encryptString($value);
-    }
 }

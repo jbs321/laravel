@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Category;
+use App\Retailer;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -30,6 +31,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('category', function ($value) {
             $id = Crypt::decryptString($value);
             return Category::where('id', $id)->first() ?? abort(404);
+        });
+
+        Route::bind('retailer', function ($value) {
+            $id = Crypt::decryptString($value);
+            return Retailer::where('id', $id)->first() ?? abort(404);
         });
     }
 

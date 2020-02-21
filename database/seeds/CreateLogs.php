@@ -11,6 +11,10 @@ class CreateLogs extends Seeder
      */
     public function run()
     {
+        if(!file_exists(storage_path("app/public/2019.csv"))) {
+            return;
+        }
+
         if ($h = fopen(storage_path("app/public/2019.csv"), "r")) {
             try {
                 $headers = fgetcsv($h, 0, ",");

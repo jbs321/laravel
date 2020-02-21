@@ -1,55 +1,39 @@
-html,
-body {
-  background-color: #fff;
-  color: #636b6f;
-  font-family: "Nunito", sans-serif;
-  font-weight: 200;
-  height: 100vh;
-  margin: 0;
-}
+/*
+Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.
+        on line 37 of C:\projects\mylogapi/public/css/app.css
 
-.full-height {
-  height: 100vh;
-}
+32: C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'
+33: C:/Ruby25-x64/bin/sass:23:in `load'
+34: C:/Ruby25-x64/bin/sass:23:in `<main>'
+35: *\/
+36: body:before {
+37:   white-space: pre;
+38:   font-family: monospace;
+39:   content: "Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of C:\projects\mylogapi/public/css/app.css\A \A 32: C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'\A 33: C:/Ruby25-x64/bin/sass:23:in `load'\A 34: C:/Ruby25-x64/bin/sass:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of C:\projects\mylogapi/public/css/app.css\A \A 32: C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'\A 33: C:/Ruby25-x64/bin/sass:23:in `load'\A 34: C:/Ruby25-x64/bin/sass:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 49 of C:\projects\mylogapi/public/css/app.css\A \A 44: C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'\A 45: C:/Ruby25-x64/bin/sass:23:in `load'\A 46: C:/Ruby25-x64/bin/sass:23:in `<main>'\A 47: *\/\A 48: body:before {\A 49:   white-space: pre;\A 50:   font-family: monospace;\A 51:   content: \\\"Error: Invalid CSS after \\\\"html,body\\\\": expected selector, was \\\\"{background-col...\\\\"\A         on line 1 of C:\projects\mylogapi/public/css/app.css\A \A 1: html,body{background-color:#fff;color:#636b6f;font-family:'Nunito', sans-serif;font-weight:200;height:100vh;margin:0}.full-height{height:100vh}.flex-center{align-items:center;display:flex;justify-content:center}.position-ref{position:relative}.content{text-align:center}.title{font-size:84px}.links{position:relative;top:0;right:0}.links a{color:#636b6f;padding:0 25px;font-size:13px;font-weight:600;letter-spacing:.1rem;text-decoration:none;text-transform:uppercase}.m-b-md{margin-bottom:30px}\A 2: /*# sourceMappingURL=app.css.map *\/\\\"; }\\"; }\"; }"; }
 
-.flex-center {
-  -webkit-box-align: center;
-          align-items: center;
-  display: -webkit-box;
-  display: flex;
-  -webkit-box-pack: center;
-          justify-content: center;
-}
-
-.position-ref {
-  position: relative;
-}
-
-.top-right {
-  position: absolute;
-  right: 10px;
-  top: 18px;
-}
-
-.content {
-  text-align: center;
-}
-
-.title {
-  font-size: 84px;
-}
-
-.links > a {
-  color: #636b6f;
-  padding: 0 25px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.1rem;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-.m-b-md {
-  margin-bottom: 30px;
-}
-
+Backtrace:
+C:\projects\mylogapi/public/css/app.css:37
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/engine.rb:494:in `block in tabulate'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/engine.rb:452:in `each'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/engine.rb:452:in `each_with_index'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/engine.rb:452:in `tabulate'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/engine.rb:417:in `_to_tree'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/engine.rb:389:in `_render_with_sourcemap'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/engine.rb:307:in `render_with_sourcemap'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/plugin/compiler.rb:462:in `update_stylesheet'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/plugin/compiler.rb:209:in `each'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/plugin.rb:82:in `update_stylesheets'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/exec/sass_scss.rb:338:in `watch_or_update'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/exec/sass_scss.rb:51:in `process_result'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/exec/base.rb:50:in `parse'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/lib/sass/exec/base.rb:18:in `parse!'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'
+C:/Ruby25-x64/bin/sass:23:in `load'
+C:/Ruby25-x64/bin/sass:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of C:\projects\mylogapi/public/css/app.css\A \A 32: C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'\A 33: C:/Ruby25-x64/bin/sass:23:in `load'\A 34: C:/Ruby25-x64/bin/sass:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of C:\projects\mylogapi/public/css/app.css\A \A 32: C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'\A 33: C:/Ruby25-x64/bin/sass:23:in `load'\A 34: C:/Ruby25-x64/bin/sass:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of C:\projects\mylogapi/public/css/app.css\A \A 32: C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'\A 33: C:/Ruby25-x64/bin/sass:23:in `load'\A 34: C:/Ruby25-x64/bin/sass:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 49 of C:\projects\mylogapi/public/css/app.css\A \A 44: C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.6.0/bin/sass:13:in `<top (required)>'\A 45: C:/Ruby25-x64/bin/sass:23:in `load'\A 46: C:/Ruby25-x64/bin/sass:23:in `<main>'\A 47: */\A 48: body:before {\A 49:   white-space: pre;\A 50:   font-family: monospace;\A 51:   content: \\\\"Error: Invalid CSS after \\\\\"html,body\\\\\": expected selector, was \\\\\"{background-col...\\\\\"\A         on line 1 of C:\projects\mylogapi/public/css/app.css\A \A 1: html,body{background-color:#fff;color:#636b6f;font-family:'Nunito', sans-serif;font-weight:200;height:100vh;margin:0}.full-height{height:100vh}.flex-center{align-items:center;display:flex;justify-content:center}.position-ref{position:relative}.content{text-align:center}.title{font-size:84px}.links{position:relative;top:0;right:0}.links a{color:#636b6f;padding:0 25px;font-size:13px;font-weight:600;letter-spacing:.1rem;text-decoration:none;text-transform:uppercase}.m-b-md{margin-bottom:30px}\A 2: /*# sourceMappingURL=app.css.map */\\\\"; }\\\"; }\\"; }\"; }"; }
