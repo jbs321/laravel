@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {applyMiddleware, createStore} from 'redux';
-import reducers from 'reducers';
-import Root from './Root'
 import Routes from "./Routes";
-import promise from 'redux-promise';
+import configureStore from './src/configureStore';
+import Root from './Root';
+import {BrowserRouter} from 'react-router-dom';
 
-const store = applyMiddleware(promise)(createStore);
+const store = configureStore();
 
-ReactDOM.render(
-    <Provider store={store(reducers)}>
+ReactDOM.render(<Provider store={store}>
+    <BrowserRouter>
         <Root>
             <Routes/>
         </Root>
-    </Provider>, document.querySelector("#root"));
+    </BrowserRouter>
+</Provider>, document.querySelector("#root"));

@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\RbcTransaction;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 class RBCTransactionController
 {

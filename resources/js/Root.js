@@ -1,19 +1,29 @@
 import React from 'react'
-import {Provider} from "react-redux";
-import {createStore, applyMiddleware} from "redux";
-import reducers from 'reducers';
-import reduxPromise from 'redux-promise';
+import {connect} from "react-redux";
+import LinearBuffer from './src/components/LinearBuffer';
+import MenuVert from './src/components/menu-vert';
 
-export default ({children, initialState = {}}) => {
-    const store = createStore(
-        reducers,
-        initialState,
-        applyMiddleware(reduxPromise)
-    );
 
-    return (
-        <Provider store={store}>
-            {children}
-        </Provider>
-    );
-};
+class Root extends React.Component {
+    renderSpinner(isLoading) {
+        if(isLoading === true) {
+            return <LinearBuffer/>;
+        }
+
+        return null;
+    }
+
+    render() {
+        return <div>
+            <MenuVert/>
+            {this.renderSpinner(this.props.general.isLoading)}
+            {this.props.children}
+        </div>
+    }
+}
+
+function mapStateToProps(state) {
+    return state;
+}
+
+export default connect(mapStateToProps)(Root)

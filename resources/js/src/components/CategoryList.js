@@ -3,9 +3,7 @@ import MaterialTable from "material-table";
 import {connect} from "react-redux";
 import {fetchCategories, createCategory, deleteCategory, updateCategory} from "actions/categories";
 
-const columns = [
-    {title: 'Name', field: 'name'},
-];
+const columns = [{title: 'Name', field: 'name'},];
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
@@ -45,21 +43,18 @@ class CategoryList extends React.Component {
     }
 
     render() {
-        return (
-            <MaterialTable
+        console.log(this.props);
+        return (<MaterialTable
                 title="Category List"
                 columns={columns}
                 options={{
-                    pageSize:10
+                    pageSize: 10
                 }}
                 data={this.props.categories}
                 editable={{
-                    onRowAdd: this.handleCreate,
-                    onRowUpdate: this.handleUpdate,
-                    onRowDelete: this.handleDelete
+                    onRowAdd: this.handleCreate, onRowUpdate: this.handleUpdate, onRowDelete: this.handleDelete
                 }}
-            />
-        );
+            />);
     }
 }
 
@@ -67,5 +62,4 @@ function mapStateToProps(state) {
     return state;
 }
 
-
-export default connect(mapStateToProps, {createCategory, fetchCategories, deleteCategory, updateCategory})(CategoryList);
+export default connect(mapStateToProps, {fetchCategories, createCategory, deleteCategory, updateCategory})(CategoryList);

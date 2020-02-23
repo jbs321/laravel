@@ -5,6 +5,7 @@ import importReducer from 'reducers/import';
 import categoryReducer from 'reducers/categories';
 import retailerReducer from 'reducers/retailers';
 import transactionReducer from 'reducers/transactions';
+import generalReducer from 'reducers/general';
 
 const rootReducer = combineReducers({
     form: formReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     categories: categoryReducer,
     retailers: retailerReducer,
     transaction: transactionReducer,
+    general: generalReducer,
 });
 
 export default rootReducer;
