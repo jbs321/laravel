@@ -16,21 +16,10 @@ class ImportController extends Controller
     public function import(Request $request)
     {
         $file = $request->files['file'];
+        $file->each(function($transaction) {
+           RbcTransaction::firstOrCreate($transaction);
+        });
 
-        $maxDateRaw = RbcTransaction::all()->max(RbcTransaction::FIELD__TRANSACTION_DATE);
-
-        if(isset($maxDateRaw)) {
-            $maxDate      =  Carbon::parse($maxDateRaw);
-            if($maxDate) {
-                $file = $file->filter(function($item) use ($maxDate) {
-                    $transactionDate = Carbon::parse($item[RbcTransaction::FIELD__TRANSACTION_DATE]);
-                    return $transactionDate->isAfter($maxDate);
-                });
-            }
-        }
-
-        $toSave = $file->toArray();
-        $result = DB::table('rbc_transaction')->insert($toSave);
-        return new JsonResponse($result);
+        return new JsonResponse($file);
     }
 }
