@@ -21,8 +21,8 @@ class CreateRbcTransactionTable extends Migration
             $table->string('cheque_number');
             $table->string('description_1');
             $table->string('description_2');
-            $table->float('cad');
-            $table->float('usd');
+            $table->string('cad');
+            $table->string('usd');
             $table->timestamps();
         });
     }
