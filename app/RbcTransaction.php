@@ -4,11 +4,11 @@ namespace App;
 
 use App\Traits\IdEncrypterTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RbcTransaction extends Model
 {
-    use IdEncrypterTrait;
-
     protected $table = 'rbc_transaction';
 
     const FIELD__ID = 'id';
@@ -20,6 +20,7 @@ class RbcTransaction extends Model
     const FIELD__DESCRIPTION_2 = 'description_2';
     const FIELD__CAD = 'cad';
     const FIELD__USD = 'usd';
+    const FIELD__RETAILER_ID = 'retailer_id';
 
     protected $fillable = [
         self::FIELD__ACCOUNT_TYPE,
@@ -30,5 +31,11 @@ class RbcTransaction extends Model
         self::FIELD__DESCRIPTION_2,
         self::FIELD__CAD,
         self::FIELD__USD,
+        self::FIELD__RETAILER_ID,
     ];
+
+    public function retailer(): BelongsTo
+    {
+        return $this->belongsTo(Retailer::class, 'retailer_id', 'id');
+    }
 }

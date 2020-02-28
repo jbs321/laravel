@@ -17,6 +17,7 @@ class Root extends React.Component {
         return <div>
             <MenuVert/>
             {this.renderSpinner(this.props.general.isLoading)}
+            <div className={"margin-bottom-15"}></div>
             {this.props.children}
         </div>
     }

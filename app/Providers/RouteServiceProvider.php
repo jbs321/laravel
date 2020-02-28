@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Category;
+use App\RbcTransaction;
 use App\Retailer;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
@@ -29,13 +30,18 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         Route::bind('category', function ($value) {
-            $id = Crypt::decryptString($value);
-            return Category::where('id', $id)->first() ?? abort(404);
+//            $id = Crypt::decryptString($value);
+            return Category::where('id', $value)->first() ?? abort(404);
         });
 
         Route::bind('retailer', function ($value) {
-            $id = Crypt::decryptString($value);
-            return Retailer::where('id', $id)->first() ?? abort(404);
+//            $id = Crypt::decryptString($value);
+            return Retailer::where('id', $value)->first() ?? abort(404);
+        });
+
+        Route::bind('transaction', function ($value) {
+//            $id = Crypt::decryptString($value);
+            return RbcTransaction::where('id', $value)->first() ?? abort(404);
         });
     }
 

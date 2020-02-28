@@ -1,6 +1,6 @@
 import {RETAILER__FETCH, RETAILER__CREATE, RETAILER__DELETE, RETAILER__UPDATE} from 'actions/retailers';
 
-export default function (state = [], action) {
+export default function (state = {}, action) {
     let newState = state;
 
     switch (action.type) {

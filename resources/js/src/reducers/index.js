@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
     import: importReducer,
     categories: categoryReducer,
     retailers: retailerReducer,
-    transaction: transactionReducer,
+    transactions: transactionReducer,
     general: generalReducer,
 });
 

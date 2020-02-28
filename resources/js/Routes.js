@@ -9,7 +9,7 @@ import Transaction from 'components/Pages/Transaction';
 
 class Routes extends React.Component {
     render() {
-        return (<div className="flex-center position-ref full-height">
+        return (<div>
                 <Switch>
                     <Route path="/category" component={Category}/>
                     <Route path="/retailer" component={Retailer}/>

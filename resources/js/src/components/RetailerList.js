@@ -47,7 +47,8 @@ class RetailerList extends React.Component {
                 title="Retailer List"
                 columns={columns}
                 options={{
-                    pageSize:10
+                    pageSize:10,
+                    selection: true
                 }}
                 data={this.props.retailers}
                 editable={{
@@ -55,6 +56,19 @@ class RetailerList extends React.Component {
                     onRowUpdate: this.handleUpdate,
                     onRowDelete: this.handleDelete
                 }}
+                actions={[
+                    {
+                        icon: 'refresh',
+                        tooltip: 'Refresh Data',
+                        isFreeAction: true,
+                        onClick: this.props.fetchRetailer,
+                    },
+                    {
+                        tooltip: 'Remove All Selected Users',
+                        icon: 'delete',
+                        onClick: (evt, data) => alert('You want to delete ' + data.length + ' rows')
+                    }
+                ]}
             />
         );
     }
