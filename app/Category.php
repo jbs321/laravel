@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Crypt;
 
 class Category extends Model
 {
-    use IdEncrypterTrait;
-
     public $timestamps = false;
 
     protected $table = 'categories';

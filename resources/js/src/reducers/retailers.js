@@ -5,9 +5,8 @@ export default function (state = {}, action) {
 
     switch (action.type) {
         case RETAILER__FETCH:
-            if (action.payload.data) {
-                return action.payload.data;
-            }
+                return _.keyBy(action.payload.data, 'id');
+
             break;
         case RETAILER__CREATE:
             if (action.payload.data) {
@@ -21,13 +20,18 @@ export default function (state = {}, action) {
             });
             break;
         case RETAILER__UPDATE:
-            var updatedActor = action.payload.data;
-            newState.filter((data) => {
-                return (data.id != updatedActor.id);
-            });
-            return [...newState, action.payload.data];
+            const {id, name, category} = action.payload.data;
+            return updateRetailerState(state, id, name, category);
             break;
         default:
             return state;
     }
+}
+
+
+const updateRetailerState = (state, id, name, category) => {
+    const newState = _.assign({}, state);
+    newState[id].name = name;
+    newState[id].category = category;
+    return newState;
 }

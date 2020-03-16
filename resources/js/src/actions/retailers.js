@@ -1,10 +1,10 @@
-export const RETAILER__FETCH = "retailer__fetch";
-export const RETAILER__CREATE = "retailer__create";
-export const RETAILER__DELETE = "retailer__delete";
-export const RETAILER__UPDATE = "retailer__update";
+export const RETAILER__FETCH = 'retailer__fetch'
+export const RETAILER__CREATE = 'retailer__create'
+export const RETAILER__DELETE = 'retailer__delete'
+export const RETAILER__UPDATE = 'retailer__update'
 
-export function fetchRetailer() {
-    const request = axios.get("/api/retailer");
+export function fetchRetailer () {
+    const request = axios.get('/api/retailer')
 
     return {
         type: RETAILER__FETCH,
@@ -12,10 +12,10 @@ export function fetchRetailer() {
     }
 }
 
-export function createRetailer(data) {
-    let fd = new FormData();
-    fd.append("name", data.name);
-    const request = axios.post("/api/retailer", fd);
+export function createRetailer (data) {
+    let fd = new FormData()
+    fd.append('name', data.name)
+    const request = axios.post('/api/retailer', fd)
 
     return {
         type: RETAILER__CREATE,
@@ -23,8 +23,8 @@ export function createRetailer(data) {
     }
 }
 
-export function deleteRetailer(data) {
-    axios.post("/api/retailer/delete/" + data.id);
+export function deleteRetailer (data) {
+    axios.post('/api/retailer/delete/' + data.id)
 
     return {
         type: RETAILER__DELETE,
@@ -32,9 +32,9 @@ export function deleteRetailer(data) {
     }
 }
 
-export function updateRetailer(data) {
-    const {id} = data;
-    const request = axios.put(`/api/retailer/${id}`, data);
+export function updateRetailer (data) {
+    const { id } = data
+    const request = axios.put(`/api/retailer/${id}`, data)
 
     return {
         type: RETAILER__UPDATE,

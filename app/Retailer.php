@@ -18,4 +18,9 @@ class Retailer extends Model
     {
         return $this->hasMany(RbcTransaction::class);
     }
+
+    public function categories()
+    {
+        return $this->hasManyThrough(Category::class, RetailerCategories::class, 'retailer_id', 'id', 'id', 'category_id');
+    }
 }

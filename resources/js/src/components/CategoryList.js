@@ -43,7 +43,6 @@ class CategoryList extends React.Component {
     }
 
     render() {
-        console.log(this.props);
         return (<MaterialTable
                 title="Category List"
                 columns={columns}

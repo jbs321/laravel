@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/api/retailer', 'RetailerController@index');
     Route::post('/api/retailer', 'RetailerController@create');
-    Route::post('/api/retailer/{retailer}', 'RetailerController@update');
+    Route::put('/api/retailer/{retailer}', 'RetailerController@update');
     Route::post('/api/retailer/delete/{retailer}', 'RetailerController@delete');
 
     Route::get('/api/transaction', 'RBCTransactionController@index');

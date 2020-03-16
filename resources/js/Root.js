@@ -1,13 +1,13 @@
 import React from 'react'
 import {connect} from "react-redux";
-import LinearBuffer from './src/components/LinearBuffer';
+import CustomizedProgressBars from './src/components/CustomizedProgressBars';
 import MenuVert from './src/components/menu-vert';
 
 
 class Root extends React.Component {
     renderSpinner(isLoading) {
         if(isLoading === true) {
-            return <LinearBuffer/>;
+            return <CustomizedProgressBars/>;
         }
 
         return null;

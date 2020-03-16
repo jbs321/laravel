@@ -1,56 +1,68 @@
-import React from 'react';
-import MaterialTable from "material-table";
-import {connect} from "react-redux";
-import {fetchRetailer, createRetailer, updateRetailer, deleteRetailer} from 'actions/retailers';
-
-const columns = [
-    {title: 'Name', field: 'name'},
-];
+import React from 'react'
+import MaterialTable from 'material-table'
+import { connect } from 'react-redux'
+import { fetchRetailer, createRetailer, updateRetailer, deleteRetailer } from 'actions/retailers'
+import { fetchCategories } from 'actions/categories'
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
-        resolve();
-    }, 600);
-});
+        resolve()
+    }, 600)
+})
 
 class RetailerList extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor (props) {
+        super(props)
 
-        this.handleUpdate = this.handleUpdate.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleCreate = this.handleCreate.bind(this);
+        this.handleDelete = this.handleDelete.bind(this)
+        this.handleCreate = this.handleCreate.bind(this)
     }
 
-    componentDidMount() {
-        this.props.fetchRetailer();
+    componentDidMount () {
+        const { fetchCategories, fetchRetailer } = this.props
+
+        fetchRetailer()
+        fetchCategories()
     }
 
-    handleUpdate(newData, oldData) {
-        this.props.updateRetailer(newData);
-        return fakePromise;
+    handleUpdate = (newData) => {
+        this.props.updateRetailer(newData)
+
+        return fakePromise
     }
 
-    handleCreate(newData) {
-        this.props.createRetailer(newData);
-        return fakePromise;
+    handleCreate (newData) {
+        this.props.createRetailer(newData)
+        return fakePromise
     }
 
-    handleDelete(oldData) {
-        this.props.deleteRetailer(oldData);
-        return fakePromise;
+    handleDelete (oldData) {
+        this.props.deleteRetailer(oldData)
+        return fakePromise
     }
 
-    render() {
+    render () {
+        const { retailers, categories } = this.props
+
+        const categoriesById = {}
+        _.each(categories, category => {
+            categoriesById[category.id] = category.name
+        })
+
+        const columns = [
+            { title: 'Name', field: 'name' },
+            { title: 'Category', field: 'category', lookup: categoriesById }
+        ]
+
         return (
             <MaterialTable
                 title="Retailer List"
                 columns={columns}
                 options={{
-                    pageSize:10,
+                    pageSize: 10,
                     selection: true
                 }}
-                data={this.props.retailers}
+                data={_.values(retailers)}
                 editable={{
                     onRowAdd: this.handleCreate,
                     onRowUpdate: this.handleUpdate,
@@ -70,12 +82,18 @@ class RetailerList extends React.Component {
                     }
                 ]}
             />
-        );
+        )
     }
 }
 
-function mapStateToProps(state) {
-    return state;
+function mapStateToProps (state) {
+    return state
 }
 
-export default connect(mapStateToProps, {fetchRetailer, createRetailer, deleteRetailer, updateRetailer})(RetailerList);
+export default connect(mapStateToProps, {
+    fetchRetailer,
+    createRetailer,
+    deleteRetailer,
+    updateRetailer,
+    fetchCategories
+})(RetailerList)

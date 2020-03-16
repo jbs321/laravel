@@ -1,8 +1,9 @@
 import React from 'react'
-import MaterialTable from 'material-table'
+import MaterialTable, {MTableToolbar} from 'material-table'
 import { connect } from 'react-redux'
 import { fetchTransaction, updateTransaction } from 'actions/transactions'
 import { fetchRetailer } from 'actions/retailers'
+import TransactionListToolbar from './TransactionListToolbar'
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
@@ -49,9 +50,21 @@ class TransactionList extends React.Component {
             { title: 'CAD', field: 'cad' },]
 
         return (<MaterialTable
+            //TODO:: Add multi select retailer assignments
+            // components={{
+            //     Toolbar: props => (
+            //         <div style={{ backgroundColor: '#f51100' }}>
+            //             <MTableToolbar {...props} />
+            //             <div>
+            //                 <TransactionListToolbar/>
+            //             </div>
+            //         </div>
+            //     )
+            // }}
             title="Transaction List"
             columns={columns}
             options={{
+                selection: true,
                 pageSize: 10
             }}
             data={_.flatMap(transactions)}
@@ -64,9 +77,9 @@ class TransactionList extends React.Component {
 
             actions={[
                 {
-                    tooltip: 'Remove All Selected Users',
-                    icon: 'delete',
-                    onClick: (evt, data) => alert('You want to delete ' + data.length + ' rows')
+                    tooltip: 'Update',
+                    icon: 'update',
+                    onClick: (evt, data) => {console.log(data); return true;}
                 }
             ]}
 
