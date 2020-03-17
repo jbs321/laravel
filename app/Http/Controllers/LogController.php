@@ -24,6 +24,45 @@ class LogController extends Controller
 
     public function showDashboard()
     {
+        $response = [
+            'data' => [
+                [
+                    'Category' => 10,
+                    'January' => 10,
+                    'February' => 10,
+                    'March' => 10,
+                    'April' => 10,
+                    'May' => 10,
+                    'June' => 10,
+                    'July' => 10,
+                    'August' => 10,
+                    'September' => 10,
+                    'October' => 10,
+                    'November' => 10,
+                    'December' => 10,
+                ],
+            ],
+            'headers' => [
+                'Category',
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ],
+        ];
+
+        return $response;
+
+        //================================================= Frozen for now ==========================================
+
         $sql = "
             SELECT * FROM crosstab(
             '

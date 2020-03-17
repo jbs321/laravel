@@ -1,18 +1,14 @@
 import {CATEGORY__FETCH, CATEGORY__CREATE, CATEGORY__DELETE, CATEGORY__UPDATE} from "../actions/categories";
 
-export default function (state = [], action) {
+export default function (state = {}, action) {
     let newState = state;
 
     switch (action.type) {
         case CATEGORY__FETCH:
-            if (action.payload.data) {
-                return action.payload.data;
-            }
+                return _.keyBy(action.payload, 'id');
             break;
         case CATEGORY__CREATE:
-            if (action.payload.data) {
-                return [...state, action.payload.data];
-            }
+                return [...state, action.payload];
             break;
         case CATEGORY__DELETE:
             var deletedId = action.payload;
@@ -21,11 +17,11 @@ export default function (state = [], action) {
             });
             break;
         case CATEGORY__UPDATE:
-            var updatedActor = action.payload.data;
+            var updatedActor = action.payload;
             newState.filter((data) => {
                 return (data.id != updatedActor.id);
             });
-            return [...newState, action.payload.data];
+            return [...newState, action.payload];
             break;
         default:
             return state;

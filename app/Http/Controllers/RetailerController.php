@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Retailer;
 use App\RetailerCategories;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Validation\Rule;
 
 class RetailerController extends Controller
 {
@@ -16,9 +18,10 @@ class RetailerController extends Controller
             ->keyBy('name')
             ->sortBy('name', SORT_ASC)
             ->map(function (Retailer $retailer) {
-                $categories = $retailer->categories()->first();
-                $retailer->category = is_null($categories) ? 18 : $categories->id;
-
+                $categories = $retailer->categories()->get()->map(function (Category $category) {
+                    return $category->name;
+                });
+                $retailer->categories = $categories;
                 return $retailer;
             })
             ->values();
@@ -48,15 +51,25 @@ class RetailerController extends Controller
     public function update(Request $request, Retailer $retailer)
     {
         $request->validate([
-            'category' => 'integer|max:50|exists:categories,id',
+            'name' => 'string|max:255',
+            'categories' => 'array',
         ]);
 
-        $retailer->update($request->all());
+        $retailer->fill($request->all());
         $retailer->save();
 
-        if($request->category) {
-            $id = RetailerCategories::updateOrCreate(['retailer_id' => $retailer->id, 'category_id' => $request->category])->id;
-            $retailer->category = $id;
+        $categoryList = Category::all();
+
+        RetailerCategories::where('retailer_id', $retailer->id)->delete();
+
+        foreach ($request->categories as $categoryName) {
+            $catId = $categoryList->firstWhere('name','ilike', $categoryName)->toArray()['id'];
+            RetailerCategories::updateOrCreate(['retailer_id' => $retailer->id, 'category_id' => $catId]);
+            $categories = $retailer->categories()->get()->map(function (Category $category) {
+                return $category->name;
+            });
+
+            $retailer->categories = $categories;
         }
 
         return json_encode($retailer);

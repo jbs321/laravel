@@ -3,6 +3,7 @@ import MaterialTable from 'material-table'
 import { connect } from 'react-redux'
 import { fetchRetailer, createRetailer, updateRetailer, deleteRetailer } from 'actions/retailers'
 import { fetchCategories } from 'actions/categories'
+import MultipleSelect from './MultipleSelect'
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
@@ -11,13 +12,6 @@ const fakePromise = new Promise(resolve => {
 })
 
 class RetailerList extends React.Component {
-    constructor (props) {
-        super(props)
-
-        this.handleDelete = this.handleDelete.bind(this)
-        this.handleCreate = this.handleCreate.bind(this)
-    }
-
     componentDidMount () {
         const { fetchCategories, fetchRetailer } = this.props
 
@@ -27,31 +21,44 @@ class RetailerList extends React.Component {
 
     handleUpdate = (newData) => {
         this.props.updateRetailer(newData)
-
         return fakePromise
     }
 
-    handleCreate (newData) {
+    handleCreate = (newData) => {
         this.props.createRetailer(newData)
         return fakePromise
     }
 
-    handleDelete (oldData) {
+    handleDelete = (oldData) => {
         this.props.deleteRetailer(oldData)
         return fakePromise
     }
 
-    render () {
-        const { retailers, categories } = this.props
+    renderSelect = (props) => {
+        const options = _.map(this.props.categories, 'name')
+        const selected = props.value
 
-        const categoriesById = {}
-        _.each(categories, category => {
-            categoriesById[category.id] = category.name
-        })
+        return <MultipleSelect options={options} selected={selected} onChange={e => {
+            const data = { ...props.rowData }
+            data[props.columnDef.field] = e.target.value
+            props.onRowDataChange(data)
+        }}/>
+    }
+
+    render () {
+        const { retailers } = this.props
 
         const columns = [
-            { title: 'Name', field: 'name' },
-            { title: 'Category', field: 'category', lookup: categoriesById }
+            {
+                title: 'Name',
+                field: 'name'
+            },
+            {
+                title: 'Categories',
+                field: 'categories',
+                editComponent: this.renderSelect,
+                render: (rowData) => <div>{JSON.stringify(rowData.categories)}</div>
+            },
         ]
 
         return (

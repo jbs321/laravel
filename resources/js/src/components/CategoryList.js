@@ -43,13 +43,15 @@ class CategoryList extends React.Component {
     }
 
     render() {
+        const {categories} = this.props;
+
         return (<MaterialTable
                 title="Category List"
                 columns={columns}
                 options={{
                     pageSize: 10
                 }}
-                data={this.props.categories}
+                data={_.values(categories)}
                 editable={{
                     onRowAdd: this.handleCreate, onRowUpdate: this.handleUpdate, onRowDelete: this.handleDelete
                 }}

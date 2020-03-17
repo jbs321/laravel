@@ -34,13 +34,12 @@ class CategoryController extends Controller
         return json_encode(['action' => 'success']);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|string|max:50|unique:categories,name',
+            'name' => 'required|string|max:50',
         ]);
 
-        $category = new Category;
         $category->fill($request->all());
         $category->save();
 
