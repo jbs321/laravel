@@ -5,14 +5,10 @@ export default function (state = [], action) {
 
     switch (action.type) {
         case RETAILER__FETCH:
-            if (action.payload.data) {
-                return action.payload.data;
-            }
+                return action.payload;
             break;
         case RETAILER__CREATE:
-            if (action.payload.data) {
-                return [...state, action.payload.data];
-            }
+                return [...state, action.payload];
             break;
         case RETAILER__DELETE:
             var deletedId = action.payload;
@@ -21,11 +17,11 @@ export default function (state = [], action) {
             });
             break;
         case RETAILER__UPDATE:
-            var updatedActor = action.payload.data;
+            var updatedActor = action.payload;
             newState.filter((data) => {
                 return (data.id != updatedActor.id);
             });
-            return [...newState, action.payload.data];
+            return [...newState, action.payload];
             break;
         default:
             return state;

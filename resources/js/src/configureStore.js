@@ -1,13 +1,13 @@
-import {createStore, applyMiddleware, compose, combineReducers} from 'redux'
+import {createStore, applyMiddleware} from 'redux'
 import reducers from 'reducers'
-import promise from 'redux-promise';
 import {spinnerMiddleware} from './middleware/spinnerMiddleWare';
+import thunk from 'redux-thunk'
 
 
 
 const middleware = [
     spinnerMiddleware,
-    promise
+    thunk
 ];
 
 const store = createStore(reducers, applyMiddleware(...middleware));

@@ -1,43 +1,25 @@
-export const RETAILER__FETCH = "retailer__fetch";
-export const RETAILER__CREATE = "retailer__create";
-export const RETAILER__DELETE = "retailer__delete";
-export const RETAILER__UPDATE = "retailer__update";
+import { dispatchHelper } from './action-helpers'
 
-export function fetchRetailer() {
-    const request = axios.get("/api/retailer");
+export const RETAILER__FETCH = 'retailer__fetch'
+export const RETAILER__CREATE = 'retailer__create'
+export const RETAILER__DELETE = 'retailer__delete'
+export const RETAILER__UPDATE = 'retailer__update'
 
-    return {
-        type: RETAILER__FETCH,
-        payload: request
-    }
+export function fetchRetailer () {
+    return dispatchHelper(axios.get('/api/retailer'), RETAILER__FETCH)
 }
 
-export function createRetailer(data) {
-    let fd = new FormData();
-    fd.append("name", data.name);
-    const request = axios.post("/api/retailer", fd);
-
-    return {
-        type: RETAILER__CREATE,
-        payload: request
-    }
+export function createRetailer (data) {
+    const fd = new FormData()
+    fd.append('name', data.name)
+    return dispatchHelper(axios.post('/api/retailer', fd), RETAILER__CREATE)
 }
 
-export function deleteRetailer(data) {
-    axios.post("/api/retailer/delete/" + data.id);
-
-    return {
-        type: RETAILER__DELETE,
-        payload: data.id
-    }
+export function deleteRetailer (data) {
+    return dispatchHelper(axios.post('/api/retailer/delete/' + data.id), RETAILER__DELETE)
 }
 
-export function updateRetailer(data) {
-    const {id} = data;
-    const request = axios.put(`/api/retailer/${id}`, data);
-
-    return {
-        type: RETAILER__UPDATE,
-        payload: request
-    }
+export function updateRetailer (data) {
+    const { id } = data
+    return dispatchHelper(axios.put(`/api/retailer/${id}`, data), RETAILER__UPDATE)
 }
