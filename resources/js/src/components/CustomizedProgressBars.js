@@ -3,12 +3,6 @@ import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-const ColorCircularProgress = withStyles({
-    root: {
-        color: '#00695c',
-    },
-})(CircularProgress);
-
 const ColorLinearProgress = withStyles({
     colorPrimary: {
         backgroundColor: '#b2dfdb',

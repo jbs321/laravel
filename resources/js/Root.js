@@ -1,22 +1,19 @@
 import React from 'react'
 import {connect} from "react-redux";
-import CustomizedProgressBars from './src/components/CustomizedProgressBars';
-import MenuVert from './src/components/menu-vert';
-
+import CustomizedProgressBars from 'components/CustomizedProgressBars';
+import MenuVert from 'components/menu-vert';
 
 class Root extends React.Component {
     renderSpinner(isLoading) {
-        if(isLoading === true) {
-            return <CustomizedProgressBars/>;
-        }
-
-        return null;
+        return  <div style={{height: "30px"}}>
+            {isLoading ? <CustomizedProgressBars/> : null}
+        </div>
     }
 
     render() {
         return <div>
             <MenuVert/>
-            {this.renderSpinner(this.props.general.isLoading)}
+            {this.renderSpinner(this.props.general.spinner)}
             <div className={"margin-bottom-15"}></div>
             {this.props.children}
         </div>

@@ -3,7 +3,8 @@ import MaterialTable from 'material-table'
 import { connect } from 'react-redux'
 import { fetchRetailer, createRetailer, updateRetailer, deleteRetailer } from 'actions/retailers'
 import { fetchCategories } from 'actions/categories'
-import MultipleSelect from './MultipleSelect'
+import MultipleSelect from './Form/MultipleSelect'
+import Chip from '@material-ui/core/Chip'
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
@@ -38,11 +39,23 @@ class RetailerList extends React.Component {
         const options = _.map(this.props.categories, 'name')
         const selected = props.value
 
-        return <MultipleSelect options={options} selected={selected} onChange={e => {
-            const data = { ...props.rowData }
-            data[props.columnDef.field] = e.target.value
-            props.onRowDataChange(data)
-        }}/>
+        return <MultipleSelect
+            options={options}
+            selected={selected}
+            onChange={e => {
+                const data = { ...props.rowData }
+                data[props.columnDef.field] = e.target.value
+                props.onRowDataChange(data)
+            }}/>
+    }
+
+    renderChips = (rowData) => {
+        if(rowData.categories === undefined) {
+            return null;
+        }
+        return <div style={{display: 'flex',flexWrap: 'wrap',}}>
+            {rowData.categories.map(value => (<Chip key={value} label={value} style={{ margin: 2 }}/>))}
+        </div>
     }
 
     render () {
@@ -57,7 +70,7 @@ class RetailerList extends React.Component {
                 title: 'Categories',
                 field: 'categories',
                 editComponent: this.renderSelect,
-                render: (rowData) => <div>{JSON.stringify(rowData.categories)}</div>
+                render: this.renderChips
             },
         ]
 

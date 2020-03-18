@@ -1,9 +1,8 @@
 import React from 'react'
-import MaterialTable, {MTableToolbar} from 'material-table'
+import MaterialTable from 'material-table'
 import { connect } from 'react-redux'
-import { fetchTransaction, updateTransaction } from 'actions/transactions'
+import { fetchTransaction } from 'actions/transactions'
 import { fetchRetailer } from 'actions/retailers'
-import TransactionListToolbar from './TransactionListToolbar'
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
@@ -23,7 +22,7 @@ class TransactionList extends React.Component {
     }
 
     handleUpdate = (newData) => {
-        return this.props.updateTransaction(newData);
+        return fakePromise
     }
 
     handleCreate = (newData) => {
@@ -101,4 +100,4 @@ function mapStateToProps (state) {
     return state
 }
 
-export default connect(mapStateToProps, { fetchTransaction, updateTransaction, fetchRetailer })(TransactionList)
+export default connect(mapStateToProps, { fetchTransaction, fetchRetailer })(TransactionList)

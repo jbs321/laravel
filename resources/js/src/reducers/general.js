@@ -1,12 +1,11 @@
-import {LOADING_ON, LOADING_OFF} from "actions/general";
+import { LOADING_SPINNER } from 'actions/action-helpers'
 
-export default function (state = {isLoading: false}, action) {
+export default function (state = {spinner: false}, action) {
     switch (action.type) {
-        case LOADING_ON:
-            return {isLoading: true};
-        case LOADING_OFF:
-            return {isLoading: false};
-            break;
+        case LOADING_SPINNER:
+            return {
+                spinner: action.payload
+            };
         default:
             return state;
     }
