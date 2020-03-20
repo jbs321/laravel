@@ -3,6 +3,8 @@ import MaterialTable from 'material-table'
 import { connect } from 'react-redux'
 import { fetchTransaction } from 'actions/transactions'
 import { fetchRetailer } from 'actions/retailers'
+import TransactionListToolbar from './TransactionListToolbar'
+import MTableListToolbar from './MaterialTable/MtableListToolbar'
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
@@ -49,17 +51,7 @@ class TransactionList extends React.Component {
             { title: 'CAD', field: 'cad' },]
 
         return (<MaterialTable
-            //TODO:: Add multi select retailer assignments
-            // components={{
-            //     Toolbar: props => (
-            //         <div style={{ backgroundColor: '#f51100' }}>
-            //             <MTableToolbar {...props} />
-            //             <div>
-            //                 <TransactionListToolbar/>
-            //             </div>
-            //         </div>
-            //     )
-            // }}
+            components={{Toolbar: props => <MTableListToolbar {...props} />}}
             title="Transaction List"
             columns={columns}
             options={{

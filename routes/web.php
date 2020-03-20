@@ -34,9 +34,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/api/transaction', 'RBCTransactionController@index');
     Route::post('/api/transaction/{transaction}', 'RBCTransactionController@update');
-//    Route::post('/api/retailer', 'RetailerController@create');
-//    Route::post('/api/retailer/{retailer}', 'RetailerController@update');
-//    Route::post('/api/retailer/delete/{retailer}', 'RetailerController@delete');
+//    Route::post('/api/retailer', 'RBCTransactionController@create');
+    Route::put('/api/transaction', 'RBCTransactionController@update');
+//    Route::post('/api/retailer/delete/{retailer}', 'RBCTransactionController@delete');
 
     //Navigate to react router
     Route::get('/{any}', function () {

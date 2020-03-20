@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RBCTransactionRequest;
 use App\RbcTransaction;
+use App\Retailer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,11 +30,18 @@ class RBCTransactionController
         return new JsonResponse($transactions);
     }
 
-    public function update(RbcTransaction $transaction, RBCTransactionRequest $request)
+    public function update(Request $request)
     {
-        $transaction->fill($request->all());
-        $transaction->save();
-        return new JsonResponse($transaction);
+        $data = $request->all();
+
+        $transactions = array_map(function(array $trans) {
+            return ['id' => $trans['id']];
+        }, $data['transactions']);
+
+        $id = Retailer::where('name', $data['retailer'])->get()->first()->id;
+        RbcTransaction::whereIn('id', $transactions)->update(['retailer_id' => $id]);
+
+        return new JsonResponse();
     }
 
     public function create(Request $request)
