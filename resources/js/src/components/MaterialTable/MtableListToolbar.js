@@ -3,11 +3,12 @@ import Checkbox from '@material-ui/core/Checkbox'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Menu from '@material-ui/core/Menu'
+import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import Toolbar from '@material-ui/core/Toolbar'
 import Tooltip from '@material-ui/core/Tooltip'
-import AccountCircle from '@material-ui/icons/AccountCircle'
+import SaveIcon from '@material-ui/icons/Save'
 import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { lighten } from '@material-ui/core/styles/colorManipulator'
@@ -15,7 +16,7 @@ import classNames from 'classnames'
 import { CsvBuilder } from 'filefy'
 import PropTypes, { oneOf } from 'prop-types'
 import * as React from 'react'
-import { Select } from '@material-ui/core'
+import { InputLabel, Select } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { updateTransaction, fetchTransaction } from 'actions/transactions'
 
@@ -258,12 +259,18 @@ export class MTableListToolbar extends React.Component {
         })
 
         return <Toolbar className={className}>
-            <Select onChange={this.updateState} value={this.state.multiChoice}>
-                <MenuItem value={''}></MenuItem>
-                {this.renderRetailers()}
-            </Select>
+            <FormControl>
+                <InputLabel id="multi-assign-label">Retailer</InputLabel>
+                <Select labelId="multi-assign-label"
+                        onChange={this.updateState}
+                        value={this.state.multiChoice}
+                        style={{ minWidth: 40 }}>
+                    <MenuItem></MenuItem>
+                    {this.renderRetailers()}
+                </Select>
+            </FormControl>
             <IconButton onClick={this.updateTransaction}>
-                <AccountCircle/>
+                <SaveIcon/>
             </IconButton>
         </Toolbar>
     }
@@ -285,7 +292,7 @@ export class MTableListToolbar extends React.Component {
 
     updateTransaction = () => {
         this.props.updateTransaction(this.state.multiChoice, this.props.selectedRows, () => {
-            this.props.fetchTransaction();
+            this.props.fetchTransaction()
         })
     }
 
