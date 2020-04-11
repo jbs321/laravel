@@ -1,11 +1,11 @@
-import React from 'react';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { withStyles, useTheme } from '@material-ui/core/styles';
-import PropTypes from "prop-types";
+import React from 'react'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
+import { useInputChange } from '../Hooks/useInputChange'
 
 const classes = {
     formControl: {
@@ -15,68 +15,47 @@ const classes = {
     selectEmpty: {
         marginTop: 2,
     },
-};
+}
 
-class SimpleSelect extends React.Component {
+const SimpleSelect = ({ selected = '', options, classes, label, id, name, handleChange } ) => {
+    const [input, handleInputChange] = useInputChange(selected)
 
-    handleChange(event) {
-        console.log('dasasdsa');
+    const renderMenuItems = () => {
+        return _.map(options, (option, $idx) => {
+            return <MenuItem key={$idx} value={option.id}><em>{option.name}</em></MenuItem>
+        })
     }
 
-    render() {
-        const {classes} = this.props;
+    const handleSelectionChange = (e) => {
+        handleInputChange(e);
 
-        return (
-            <FormControl className={classes.formControl}>
-                <InputLabel shrink id="demo-simple-select-placeholder-label-label">{this.props.label}</InputLabel>
+        if(_.isFunction(handleChange)) {
+            handleChange(e.target.value);
+        }
+    }
 
-                <Select
-                    onChange={(val) => console.log(val)}
-                    displayEmpty
-                    className={classes.selectEmpty}>
-                    <MenuItem value=""><em>None</em></MenuItem>
-                    {_.map(this.props.options, (option, $idx) => <MenuItem key={$idx} value={option.value}><em>{option.name}</em></MenuItem>)}
-                </Select>
-                <FormHelperText>Label + placeholder</FormHelperText>
-            </FormControl>
-        );
-    };
+    return <FormControl className={classes.formControl}>
+        <InputLabel shrink id={id}>{label}</InputLabel>
+
+        <Select
+            displayEmpty
+            labelId={id}
+            className={classes.selectEmpty}
+            onChange={handleSelectionChange}
+            value={input}
+            name={name}
+            id={name}>
+            {renderMenuItems()}
+        </Select>
+    </FormControl>
 }
 
 SimpleSelect.propTypes = {
-    label: PropTypes.string.isRequired,
-    // handleChange: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    handleChange: PropTypes.func,
+    selected: PropTypes.string,
     options: PropTypes.array.isRequired
-};
+}
 
-export default withStyles(classes)(SimpleSelect);
-
-// export function SimpleSelectWithError() {
-//     const classes = useStyles();
-//
-//     const handleChange = event => {
-//         console.log('dasasdsa')
-//     };
-//
-//     return (
-//         <FormControl className={classes.formControl} error>
-//             <InputLabel id="demo-simple-select-error-label">Name</InputLabel>
-//             <Select
-//                 labelId="demo-simple-select-error-label"
-//                 id="demo-simple-select-error"
-//                 value={age}
-//                 onChange={handleChange}
-//                 renderValue={value => `⚠️  - ${value}`}
-//             >
-//                 <MenuItem value="">
-//                     <em>None</em>
-//                 </MenuItem>
-//                 <MenuItem value={10}>Ten</MenuItem>
-//                 <MenuItem value={20}>Twenty</MenuItem>
-//                 <MenuItem value={30}>Thirty</MenuItem>
-//             </Select>
-//             <FormHelperText>Error</FormHelperText>
-//         </FormControl>
-//     );
-// }
-
+export default withStyles(classes)(SimpleSelect)

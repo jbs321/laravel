@@ -16,9 +16,6 @@ import classNames from 'classnames'
 import { CsvBuilder } from 'filefy'
 import PropTypes, { oneOf } from 'prop-types'
 import * as React from 'react'
-import { InputLabel, Select } from '@material-ui/core'
-import { connect } from 'react-redux'
-import { updateTransaction, fetchTransaction } from 'actions/transactions'
 
 export const styles = theme => ({
     root: {
@@ -259,19 +256,7 @@ export class MTableListToolbar extends React.Component {
         })
 
         return <Toolbar className={className}>
-            <FormControl>
-                <InputLabel id="multi-assign-label">Retailer</InputLabel>
-                <Select labelId="multi-assign-label"
-                        onChange={this.updateState}
-                        value={this.state.multiChoice}
-                        style={{ minWidth: 40 }}>
-                    <MenuItem></MenuItem>
-                    {this.renderRetailers()}
-                </Select>
-            </FormControl>
-            <IconButton onClick={this.updateTransaction}>
-                <SaveIcon/>
-            </IconButton>
+            {this.props.selectedRowsComponent}
         </Toolbar>
     }
 
@@ -288,12 +273,6 @@ export class MTableListToolbar extends React.Component {
 
     updateState = (e) => {
         this.setState({ ['multiChoice']: e.target.value })
-    }
-
-    updateTransaction = () => {
-        this.props.updateTransaction(this.state.multiChoice, this.props.selectedRows, () => {
-            this.props.fetchTransaction()
-        })
     }
 
     render () {
@@ -367,13 +346,11 @@ MTableListToolbar.propTypes = {
     exportDelimiter: PropTypes.string,
     exportFileName: PropTypes.string,
     exportCsv: PropTypes.func,
-    classes: PropTypes.object
+    classes: PropTypes.object,
 }
 
 function mapStateToProps (state) {
     return state
 }
 
-export default withStyles(styles)(
-    connect(mapStateToProps, { updateTransaction, fetchTransaction })(MTableListToolbar)
-)
+export default withStyles(styles)(MTableListToolbar)

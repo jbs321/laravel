@@ -1,10 +1,20 @@
 import React from 'react'
 import MaterialTable from 'material-table'
 import { connect } from 'react-redux'
-import { fetchRetailer, createRetailer, updateRetailer, deleteRetailer } from 'actions/retailers'
+import {
+    fetchRetailer,
+    createRetailer,
+    updateRetailer,
+    deleteRetailer,
+    updateRetailersWithCategoryId
+} from 'actions/retailers'
 import { fetchCategories } from 'actions/categories'
 import MultipleSelect from './Form/MultipleSelect'
 import Chip from '@material-ui/core/Chip'
+import MTableListToolbar from './MaterialTable/MtableListToolbar'
+import CategorySelect from './Form/CategorySelect'
+import IconButton from '@material-ui/core/IconButton'
+import Save from '@material-ui/icons/Save'
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
@@ -13,6 +23,12 @@ const fakePromise = new Promise(resolve => {
 })
 
 class RetailerList extends React.Component {
+    state = {
+        multiSelect: {
+            categoryId: '',
+        }
+    }
+
     componentDidMount () {
         const { fetchCategories, fetchRetailer } = this.props
 
@@ -23,6 +39,16 @@ class RetailerList extends React.Component {
     handleUpdate = (newData) => {
         this.props.updateRetailer(newData)
         return fakePromise
+    }
+
+    handleMultipleUpdate = (categoryId) => {
+        this.setState({ multiSelect: { categoryId: categoryId } })
+    }
+
+    submitMultiUpdate = (evt, data) => {
+        this.props.updateRetailersWithCategoryId(this.state.multiSelect.categoryId, data, () => {
+           this.props.fetchRetailer();
+        });
     }
 
     handleCreate = (newData) => {
@@ -50,12 +76,18 @@ class RetailerList extends React.Component {
     }
 
     renderChips = (rowData) => {
-        if(rowData.categories === undefined) {
-            return null;
+        if (rowData.categories === undefined) {
+            return null
         }
-        return <div style={{display: 'flex',flexWrap: 'wrap',}}>
+        return <div style={{ display: 'flex', flexWrap: 'wrap', }}>
             {rowData.categories.map(value => (<Chip key={value} label={value} style={{ margin: 2 }}/>))}
         </div>
+    }
+
+    renderToolbar = (props) => {
+        const select = <CategorySelect handleChange={this.handleMultipleUpdate}/>
+
+        return <MTableListToolbar {...props} selectedRowsComponent={select}/>
     }
 
     render () {
@@ -96,11 +128,12 @@ class RetailerList extends React.Component {
                         onClick: this.props.fetchRetailer,
                     },
                     {
-                        tooltip: 'Remove All Selected Users',
-                        icon: 'delete',
-                        onClick: (evt, data) => alert('You want to delete ' + data.length + ' rows')
-                    }
+                        tooltip: 'Update Rows',
+                        icon: 'update',
+                        onClick: this.submitMultiUpdate
+                    },
                 ]}
+                components={{ Toolbar: this.renderToolbar }}
             />
         )
     }
@@ -115,5 +148,6 @@ export default connect(mapStateToProps, {
     createRetailer,
     deleteRetailer,
     updateRetailer,
-    fetchCategories
+    fetchCategories,
+    updateRetailersWithCategoryId,
 })(RetailerList)

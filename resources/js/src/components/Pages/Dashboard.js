@@ -13,7 +13,7 @@ const commonColumnStyle = {
     }
 }
 const renderColumn = (rowKey, rowData) => {
-    const val = rowData[rowKey]
+    const val = _.round(rowData[rowKey], 2);
 
     if (0 === val) {
         return <span style={{color: "#c5c5c5"}}>{val}</span>

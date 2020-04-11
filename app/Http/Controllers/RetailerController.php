@@ -8,7 +8,9 @@ use App\RetailerCategories;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class RetailerController extends Controller
 {
@@ -63,7 +65,7 @@ class RetailerController extends Controller
         RetailerCategories::where('retailer_id', $retailer->id)->delete();
 
         foreach ($request->categories as $categoryName) {
-            $catId = $categoryList->firstWhere('name','ilike', $categoryName)->toArray()['id'];
+            $catId = $categoryList->firstWhere('name', 'ilike', $categoryName)->toArray()['id'];
             RetailerCategories::updateOrCreate(['retailer_id' => $retailer->id, 'category_id' => $catId]);
             $categories = $retailer->categories()->get()->map(function (Category $category) {
                 return $category->name;
@@ -73,5 +75,31 @@ class RetailerController extends Controller
         }
 
         return json_encode($retailer);
+    }
+
+    public function updateRetailersWithCategory(Request $request, Category $category)
+    {
+        $request->validate([
+            'retailers' => 'required|array|min:1',
+            'retailers.*' => 'required|array',
+            'retailers.*.id' => 'required|integer|exists:retailers,id',
+        ]);
+
+        $retailers = $request->get('retailers');
+
+        $retailerIds = array_map(function ($retailer) {
+            return $retailer['id'];
+        }, $retailers);
+
+        RetailerCategories::whereIn('retailer_id', $retailerIds)->delete();
+
+        $retailers = array_map(function (array $retailer) use ($category) {
+            return ['retailer_id' => $retailer['id'], 'category_id' => $category->id, 'created_at' => 'now()', 'updated_at' => 'now()'];
+        }, $retailers);
+
+        $result = DB::table('retailer_categories')->insert($retailers);
+
+        return new JsonResponse($result);
+
     }
 }

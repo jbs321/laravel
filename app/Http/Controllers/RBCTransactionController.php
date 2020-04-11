@@ -32,13 +32,19 @@ class RBCTransactionController
 
     public function update(Request $request)
     {
+        $request->validate([
+            'retailer.id' => 'required|integer|exists:retailers,id',
+            'transactions' => 'required|array|min:1',
+            'transactions.*' => 'required|array',
+            'transactions.*.id' => 'required|integer|exists:rbc_transaction,id',
+        ]);
         $data = $request->all();
 
         $transactions = array_map(function(array $trans) {
             return ['id' => $trans['id']];
         }, $data['transactions']);
 
-        $id = Retailer::where('name', $data['retailer'])->get()->first()->id;
+        $id = $request->get('retailer')['id'];
         RbcTransaction::whereIn('id', $transactions)->update(['retailer_id' => $id]);
 
         return new JsonResponse();

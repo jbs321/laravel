@@ -1,10 +1,12 @@
 import React from 'react'
 import MaterialTable from 'material-table'
 import { connect } from 'react-redux'
-import { fetchTransaction } from 'actions/transactions'
+import { fetchTransaction, updateTransaction } from 'actions/transactions'
 import { fetchRetailer } from 'actions/retailers'
 import TransactionListToolbar from './TransactionListToolbar'
 import MTableListToolbar from './MaterialTable/MtableListToolbar'
+import CategorySelect from './Form/CategorySelect'
+import RetailerSelect from './Form/RetailerSelect'
 
 const fakePromise = new Promise(resolve => {
     setTimeout(() => {
@@ -13,6 +15,12 @@ const fakePromise = new Promise(resolve => {
 })
 
 class TransactionList extends React.Component {
+    state = {
+        multiSelect: {
+            retailerId: '',
+        }
+    }
+
     componentDidMount () {
         if(_.isEmpty(this.props.retailers)) {
             this.props.fetchRetailer()
@@ -35,6 +43,24 @@ class TransactionList extends React.Component {
         return fakePromise
     }
 
+    submitMultiUpdate = (evt, data) => {
+        const {retailers} = this.props;
+        const {retailerId} = this.state.multiSelect;
+        this.props.updateTransaction(retailers[retailerId], data, () => {
+            this.props.fetchTransaction();
+        });
+    }
+
+    handleMultipleUpdate = (retailerId) => {
+        this.setState({ multiSelect: { retailerId: retailerId } })
+    }
+
+    renderToolbar = (props) => {
+        const select = <RetailerSelect handleChange={this.handleMultipleUpdate}/>
+
+        return <MTableListToolbar {...props} selectedRowsComponent={select}/>
+    }
+
     render () {
         let lookup = {}
         const { retailers, transactions } = this.props
@@ -51,7 +77,7 @@ class TransactionList extends React.Component {
             { title: 'CAD', field: 'cad' },]
 
         return (<MaterialTable
-            components={{Toolbar: props => <MTableListToolbar {...props} />}}
+            components={{ Toolbar: this.renderToolbar }}
             title="Transaction List"
             columns={columns}
             options={{
@@ -68,10 +94,16 @@ class TransactionList extends React.Component {
 
             actions={[
                 {
-                    tooltip: 'Update',
+                    icon: 'refresh',
+                    tooltip: 'Refresh Data',
+                    isFreeAction: true,
+                    onClick: this.props.fetchTransaction,
+                },
+                {
+                    tooltip: 'Update Rows',
                     icon: 'update',
-                    onClick: (evt, data) => {console.log(data); return true;}
-                }
+                    onClick: this.submitMultiUpdate
+                },
             ]}
 
             //Panel
@@ -92,4 +124,4 @@ function mapStateToProps (state) {
     return state
 }
 
-export default connect(mapStateToProps, { fetchTransaction, fetchRetailer })(TransactionList)
+export default connect(mapStateToProps, { fetchTransaction, fetchRetailer, updateTransaction })(TransactionList)
