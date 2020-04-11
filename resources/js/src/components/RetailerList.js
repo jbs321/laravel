@@ -64,7 +64,7 @@ class RetailerList extends React.Component {
         const columns = [
             {
                 title: 'Name',
-                field: 'name'
+                field: 'name',
             },
             {
                 title: 'Categories',

@@ -6,6 +6,7 @@ use App\Traits\IdEncrypterTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 class RbcTransaction extends Model
 {
@@ -38,4 +39,6 @@ class RbcTransaction extends Model
     {
         return $this->belongsTo(Retailer::class, 'retailer_id', 'id');
     }
+
+
 }

@@ -2,14 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Log;
+use App\RbcTransaction;
+use App\Repositories\TransactionRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use function App\keyByColumns;
 
 class LogController extends Controller
 {
+    const HEADERS = [
+        0 => 'Category',
+        1 => 'January',
+        2 => 'February',
+        3 => 'March',
+        4 => 'April',
+        5 => 'May',
+        6 => 'June',
+        7 => 'July',
+        8 => 'August',
+        9 => 'September',
+        10 => 'October',
+        11 => 'November',
+        12 => 'December',
+    ];
+
+    protected $transactionRepository;
+
+    public function __construct(TransactionRepository $transactionRepository)
+    {
+        $this->transactionRepository = $transactionRepository;
+    }
+
     public function index()
     {
         return view('log');
@@ -21,6 +49,44 @@ class LogController extends Controller
 
         return view('log');
     }
+
+
+    public function showOverview(int $year)
+    {
+        $assembleResponse = [];
+
+        $data = $this->transactionRepository->fetchTransactionsByYear($year);
+
+        $data = keyByColumns($data, ['year', 'month', 'category_id']);
+        $categories = Category::all();
+
+        $categories->each(function(Category $category) use ($year, $data, &$assembleResponse){
+            $row = [];
+            $id   = $category->id;
+            $name = $category->name;
+
+            foreach (self::HEADERS as $key => $header) {
+                if(0 === $key) {
+                    $row[$header] = $name;
+                    continue;
+                }
+
+                $month = $key;
+
+                if(isset($data[$year][$month][$id][0])) {
+                    $row[$header] = $data[$year][$month][$id][0]['sum'];
+                } else {
+                    $row[$header] = 0;
+                }
+            }
+
+            $assembleResponse[] = $row;
+        });
+
+        return new JsonResponse($assembleResponse);
+    }
+
+
 
     public function showDashboard()
     {
@@ -69,10 +135,11 @@ class LogController extends Controller
                select c.name,
                       extract(month from l.datetime) as month,
                       sum(l.amount)                  as amount
-               from logs l
+               from transactions l
                left join categories c on l.category_id = c.id
                where
                extract(year from l.datetime) = 2019
+               and l.retailer
                group by c.name, extract(month from l.datetime)
                order by c.name, extract(month from l.datetime)
             ') AS logs(

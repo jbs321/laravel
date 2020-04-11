@@ -12,7 +12,6 @@
 */
 Auth::routes();
 
-
 Route::middleware(['auth'])->group(function () {
     //API - ROUTES TEMPORARY
     Route::post('/logs/annual-summary', 'LogController@showDashboard');
@@ -34,14 +33,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/api/transaction', 'RBCTransactionController@index');
     Route::post('/api/transaction/{transaction}', 'RBCTransactionController@update');
-//    Route::post('/api/retailer', 'RBCTransactionController@create');
     Route::put('/api/transaction', 'RBCTransactionController@update');
-//    Route::post('/api/retailer/delete/{retailer}', 'RBCTransactionController@delete');
+    Route::post('/api/transaction/overview/{year}', 'LogController@showOverview');
 
     //Navigate to react router
     Route::get('/{any}', function () {
         return view('home');
     })->where('any', '.*');
 });
-
 
