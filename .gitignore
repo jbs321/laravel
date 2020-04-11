@@ -12,3 +12,6 @@ npm-debug.log
 yarn-error.log
 /.vagrant
 /.idea
+app.js
+vendor.js
+manifest.js
