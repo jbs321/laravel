@@ -19,7 +19,7 @@ class RBCTransactionController
 {
     public function index()
     {
-        $transactions = RbcTransaction::with('retailer')->get()
+        $transactions = RbcTransaction::with('retailer')->where('retailer_id','=' , null)->get()
             ->sortBy(RbcTransaction::FIELD__TRANSACTION_DATE, SORT_DESC, true)
             ->map(function (RbcTransaction $trans) {
                 $trans->retailerName = $trans->retailer->name ?? null;
