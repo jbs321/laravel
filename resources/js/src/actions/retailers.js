@@ -5,15 +5,14 @@ export const RETAILER__CREATE = 'retailer__create'
 export const RETAILER__DELETE = 'retailer__delete'
 export const RETAILER__UPDATE = 'retailer__update'
 export const RETAILER__CATEGORY_UPDATE = 'retailer__category_update'
+export const RETAILER__BULK_DELETE = 'retailer__bulk_delete'
 
 export function fetchRetailer () {
     return dispatchHelper(axios.get('/api/retailer'), RETAILER__FETCH)
 }
 
 export function createRetailer (data) {
-    const fd = new FormData()
-    fd.append('name', data.name)
-    return dispatchHelper(axios.post('/api/retailer', fd), RETAILER__CREATE)
+    return dispatchHelper(axios.post('/api/retailer', { name: data.name }), RETAILER__CREATE)
 }
 
 export function deleteRetailer (data) {
@@ -21,15 +20,13 @@ export function deleteRetailer (data) {
 }
 
 export function updateRetailer (data) {
-    const { id } = data
-    return dispatchHelper(axios.put(`/api/retailer/${id}`, data), RETAILER__UPDATE)
+    return dispatchHelper(axios.put(`/api/retailer/${data.id}`, data), RETAILER__UPDATE)
 }
 
-export function updateRetailersWithCategoryId (categoryId, data = [], cb) {
-    const request = axios.post(`/api/retailers/category/${categoryId}`, {retailers: data});
+export function updateRetailersWithCategoryId (categoryId, data = []) {
+    return dispatchHelper(axios.post(`/api/retailers/category/${categoryId}`, { retailers: data }), RETAILER__CATEGORY_UPDATE)
+}
 
-    //callback on success
-    request.then(() => cb());
-
-    return dispatchHelper(request, RETAILER__CATEGORY_UPDATE)
+export function deleteRetailers (data = []) {
+    return dispatchHelper(axios.post(`/api/retailers/delete`, { retailers: data }), RETAILER__BULK_DELETE)
 }

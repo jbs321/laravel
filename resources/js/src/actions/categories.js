@@ -10,10 +10,7 @@ export function fetchCategories() {
 }
 
 export function createCategory(data) {
-    let fd = new FormData();
-    fd.append("name", data.name);
-
-    return dispatchHelper(axios.post("/api/category", fd), CATEGORY__CREATE)
+    return dispatchHelper(axios.post("/api/category", {name: data.name}), CATEGORY__CREATE)
 }
 
 export function deleteCategory({id}) {
@@ -21,6 +18,5 @@ export function deleteCategory({id}) {
 }
 
 export function updateCategory(data) {
-    const {id} = data;
-    return dispatchHelper(axios.put(`/api/category/${id}`, data), CATEGORY__UPDATE)
+    return dispatchHelper(axios.put(`/api/category/${data.id}`, data), CATEGORY__UPDATE)
 }

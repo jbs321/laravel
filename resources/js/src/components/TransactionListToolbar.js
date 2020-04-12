@@ -25,7 +25,7 @@ export default function TransactionListToolbar() {
     const classes = useStyles();
 
     const handleChange = event => {
-        console.log(event.target.value);
+        console.log('');
     };
 
     return (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -7,10 +7,11 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Chip from '@material-ui/core/Chip'
 import PropTypes from 'prop-types'
+import { useInputChange } from '../Hooks/useInputChange'
 
-const useStyles = makeStyles(theme => ({
+const classes = {
     formControl: {
-        margin: theme.spacing(1),
+        margin: 1,
         minWidth: 120,
         maxWidth: 300,
     },
@@ -22,67 +23,60 @@ const useStyles = makeStyles(theme => ({
         margin: 2,
     },
     noLabel: {
-        marginTop: theme.spacing(3),
+        marginTop: 1,
     },
-}))
+}
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
 const MenuProps = {
     PaperProps: {
         style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            maxHeight: 200,
             width: 250,
         },
     },
 }
 
-function getStyles (name, optionsName, theme) {
-    return {
-        fontWeight:
-            optionsName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
+const MultipleSelect = ({ id, name, options = [], selected = [], onChange, labelId, labelTitle, classes }) => {
+    const [input, handleInputChange] = useInputChange(selected)
+
+    const handleChange = (e) => {
+        handleInputChange(e)
+
+        if (_.isFunction(onChange)) {
+            onChange(e)
+        }
     }
-}
 
-export default function MultipleSelect (props) {
-    const classes = useStyles()
-    const theme = useTheme()
+    const renderMenuItems = () => {
+        return _.map(_.values(options), ({ name, id }) => (
+            <MenuItem key={id} value={id}>{name}</MenuItem>
+        ))
+    }
 
-    const [optionName, setOptionName] = React.useState(props.selected)
-
-    const handleChange = event => {
-        setOptionName(event.target.value);
-        props.onChange(event);
-    };
+    const renderChips = (selected) => {
+        return <div className={classes.chips}>
+            {selected.map((option, key) =>
+                <Chip key={key} label={options[option].name} className={classes.chip}/>
+            )}
+        </div>
+    }
 
     return (
         <div>
             <FormControl className={classes.formControl}>
-                <InputLabel id="demo-mutiple-chip-label">Select Category</InputLabel>
+                <InputLabel id={labelId}>{labelTitle}</InputLabel>
                 <Select
-                    labelId="demo-mutiple-chip-label"
-                    id="demo-mutiple-chip"
                     multiple
-                    value={optionName}
+                    labelId={labelId}
+                    id={id}
+                    name={name}
+                    value={input}
                     onChange={handleChange}
-                    input={<Input id="select-multiple-chip"/>}
-                    renderValue={selected => (
-                        <div className={classes.chips}>
-                            {selected.map(value => (
-                                <Chip key={value} label={value} className={classes.chip}/>
-                            ))}
-                        </div>
-                    )}
+                    input={<Input id={id} name={name}/>}
+                    renderValue={renderChips}
                     MenuProps={MenuProps}>
 
-                    {props.options.map(name => (
-                        <MenuItem key={name} value={name} style={getStyles(name, optionName, theme)}>
-                            {name}
-                        </MenuItem>
-                    ))}
-
+                    {renderMenuItems()}
                 </Select>
             </FormControl>
         </div>
@@ -90,7 +84,12 @@ export default function MultipleSelect (props) {
 }
 
 MultipleSelect.propTypes = {
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    labelId: PropTypes.string,
     selected: PropTypes.array,
-    options: PropTypes.array.isRequired,
+    options: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
 }
+
+export default withStyles(classes)(MultipleSelect)

@@ -54,7 +54,10 @@ SimpleSelect.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string,
     handleChange: PropTypes.func,
-    selected: PropTypes.string,
+    selected: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
     options: PropTypes.array.isRequired
 }
 

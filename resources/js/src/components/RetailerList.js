@@ -6,72 +6,95 @@ import {
     createRetailer,
     updateRetailer,
     deleteRetailer,
-    updateRetailersWithCategoryId
+    updateRetailersWithCategoryId,
+    deleteRetailers
 } from 'actions/retailers'
 import { fetchCategories } from 'actions/categories'
-import MultipleSelect from './Form/MultipleSelect'
 import Chip from '@material-ui/core/Chip'
 import MTableListToolbar from './MaterialTable/MtableListToolbar'
 import CategorySelect from './Form/CategorySelect'
-import IconButton from '@material-ui/core/IconButton'
-import Save from '@material-ui/icons/Save'
-
-const fakePromise = new Promise(resolve => {
-    setTimeout(() => {
-        resolve()
-    }, 600)
-})
+import MultipleSelectCategories from './Form/MultipleSelectCategories'
 
 class RetailerList extends React.Component {
     state = {
+        isLoading: false,
         multiSelect: {
             categoryId: '',
         }
     }
 
     componentDidMount () {
-        const { fetchCategories, fetchRetailer } = this.props
+        if (_.isEmpty(this.props.retailers)) {
+            this.toggleLoader(true)
+            this.props.fetchRetailer().then(() => {
+                this.toggleLoader(false)
+            })
+        }
 
-        fetchRetailer()
-        fetchCategories()
-    }
+        if (_.isEmpty(this.props.categories)) {
+            this.toggleLoader(true)
+            this.props.fetchCategories().then(() => {
+                this.toggleLoader(false)
+            })
+        }
 
-    handleUpdate = (newData) => {
-        this.props.updateRetailer(newData)
-        return fakePromise
     }
 
     handleMultipleUpdate = (categoryId) => {
         this.setState({ multiSelect: { categoryId: categoryId } })
     }
 
+    submitMultiRemove = (evt, data) => {
+        this.toggleLoader(true)
+        this.props.deleteRetailers(_.map(data, row => row.id)).then(() => {
+            this.props.fetchRetailer().then(() => {
+                this.toggleLoader(false)
+            })
+        })
+    }
+
+    toggleLoader = (isLoading) => {
+        if (!_.isBoolean(isLoading)) throw new Error('isLoading must be boolean')
+        this.setState({ isLoading: isLoading })
+    }
+
     submitMultiUpdate = (evt, data) => {
-        this.props.updateRetailersWithCategoryId(this.state.multiSelect.categoryId, data, () => {
-           this.props.fetchRetailer();
-        });
+        const { multiSelect: { categoryId } } = this.state
+        const { fetchRetailer, updateRetailersWithCategoryId } = this.props
+
+        if (!categoryId) {
+            return null
+        }
+
+        this.toggleLoader(true)
+        return updateRetailersWithCategoryId(categoryId, data).then(() => {
+            fetchRetailer().then(() => {
+                this.toggleLoader(false)
+            })
+        })
     }
 
     handleCreate = (newData) => {
-        this.props.createRetailer(newData)
-        return fakePromise
+        return this.props.createRetailer(newData)
+    }
+
+    handleUpdate = (newData) => {
+        return this.props.updateRetailer(newData)
     }
 
     handleDelete = (oldData) => {
-        this.props.deleteRetailer(oldData)
-        return fakePromise
+        return this.props.deleteRetailer(oldData)
     }
 
-    renderSelect = (props) => {
-        const options = _.map(this.props.categories, 'name')
-        const selected = props.value
+    renderSelect = ({ value = [], rowData, columnDef, onRowDataChange }) => {
+        const selected = _.map(_.keys(_.keyBy(value, 'id')), val => parseInt(val));
 
-        return <MultipleSelect
-            options={options}
+        return <MultipleSelectCategories
             selected={selected}
             onChange={e => {
-                const data = { ...props.rowData }
-                data[props.columnDef.field] = e.target.value
-                props.onRowDataChange(data)
+                const data = { ...rowData }
+                data[columnDef.field] = e.target.value
+                onRowDataChange(data)
             }}/>
     }
 
@@ -79,15 +102,25 @@ class RetailerList extends React.Component {
         if (rowData.categories === undefined) {
             return null
         }
+
         return <div style={{ display: 'flex', flexWrap: 'wrap', }}>
-            {rowData.categories.map(value => (<Chip key={value} label={value} style={{ margin: 2 }}/>))}
+            {rowData.categories.map(category => (
+                <Chip key={category.id} label={category.name} style={{ margin: 2 }}/>))}
         </div>
     }
 
     renderToolbar = (props) => {
-        const select = <CategorySelect handleChange={this.handleMultipleUpdate}/>
+        const { categoryId } = this.state.multiSelect
+        const select = <CategorySelect selected={categoryId} handleChange={this.handleMultipleUpdate}/>
 
         return <MTableListToolbar {...props} selectedRowsComponent={select}/>
+    }
+
+    submitRefresh = () => {
+        this.toggleLoader(true)
+        this.props.fetchRetailer().then(() => {
+            this.toggleLoader(false)
+        })
     }
 
     render () {
@@ -114,6 +147,7 @@ class RetailerList extends React.Component {
                     pageSize: 10,
                     selection: true
                 }}
+                isLoading={this.state.isLoading}
                 data={_.values(retailers)}
                 editable={{
                     onRowAdd: this.handleCreate,
@@ -125,14 +159,20 @@ class RetailerList extends React.Component {
                         icon: 'refresh',
                         tooltip: 'Refresh Data',
                         isFreeAction: true,
-                        onClick: this.props.fetchRetailer,
+                        onClick: this.submitRefresh,
                     },
                     {
                         tooltip: 'Update Rows',
                         icon: 'update',
                         onClick: this.submitMultiUpdate
                     },
+                    {
+                        tooltip: 'Remove Rows',
+                        icon: 'delete',
+                        onClick: this.submitMultiRemove
+                    },
                 ]}
+
                 components={{ Toolbar: this.renderToolbar }}
             />
         )
@@ -150,4 +190,5 @@ export default connect(mapStateToProps, {
     updateRetailer,
     fetchCategories,
     updateRetailersWithCategoryId,
+    deleteRetailers,
 })(RetailerList)

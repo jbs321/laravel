@@ -30,8 +30,8 @@ class CategoryController extends Controller
 
     public function delete(Category $category)
     {
-        $category->delete();
-        return json_encode(['action' => 'success']);
+        $deletedId = $category->delete();
+        return json_encode($category->id);
     }
 
     public function update(Request $request, Category $category)

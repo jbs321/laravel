@@ -7,10 +7,7 @@ use App\Retailer;
 use App\RetailerCategories;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Validator;
 
 class RetailerController extends Controller
 {
@@ -20,10 +17,7 @@ class RetailerController extends Controller
             ->keyBy('name')
             ->sortBy('name', SORT_ASC)
             ->map(function (Retailer $retailer) {
-                $categories = $retailer->categories()->get()->map(function (Category $category) {
-                    return $category->name;
-                });
-                $retailer->categories = $categories;
+                $retailer->categories;
                 return $retailer;
             })
             ->values();
@@ -47,7 +41,7 @@ class RetailerController extends Controller
     public function delete(Retailer $retailer)
     {
         $retailer->delete();
-        return json_encode(['action' => 'success']);
+        return json_encode($retailer->id);
     }
 
     public function update(Request $request, Retailer $retailer)
@@ -55,24 +49,22 @@ class RetailerController extends Controller
         $request->validate([
             'name' => 'string|max:255',
             'categories' => 'array',
+            'categories.*' => 'integer|exists:categories,id',
         ]);
 
         $retailer->fill($request->all());
         $retailer->save();
 
-        $categoryList = Category::all();
-
+        //Clear all old categories
         RetailerCategories::where('retailer_id', $retailer->id)->delete();
 
-        foreach ($request->categories as $categoryName) {
-            $catId = $categoryList->firstWhere('name', 'ilike', $categoryName)->toArray()['id'];
-            RetailerCategories::updateOrCreate(['retailer_id' => $retailer->id, 'category_id' => $catId]);
-            $categories = $retailer->categories()->get()->map(function (Category $category) {
-                return $category->name;
-            });
+        array_map(function (int $category_id) use (&$retailer) {
+            $retailer_id = $retailer->id;
 
-            $retailer->categories = $categories;
-        }
+            RetailerCategories::updateOrCreate(compact('retailer_id', 'category_id'));
+        }, $request->get('categories'));
+
+        $retailer->categories;
 
         return json_encode($retailer);
     }
@@ -100,6 +92,17 @@ class RetailerController extends Controller
         $result = DB::table('retailer_categories')->insert($retailers);
 
         return new JsonResponse($result);
+    }
 
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'retailers' => 'required|array',
+            'retailers.*' => 'required|integer|exists:retailers,id',
+        ]);
+
+        $result = DB::table('retailers')->whereIn('id', $request->get('retailers'))->delete();
+
+        return new JsonResponse(['status' => (bool) $result]);
     }
 }
