@@ -15,3 +15,4 @@ yarn-error.log
 app.js
 vendor.js
 manifest.js
+composer.lock
