@@ -21,8 +21,8 @@ const SimpleSelect = ({ selected = '', options, classes, label, id, name, handle
     const [input, handleInputChange] = useInputChange(selected)
 
     const renderMenuItems = () => {
-        return _.map(options, (option, $idx) => {
-            return <MenuItem key={$idx} value={option.id}><em>{option.name}</em></MenuItem>
+        return _.map(options, (option) => {
+            return <MenuItem key={option.id} value={option.id}><em>{option.name}</em></MenuItem>
         })
     }
 

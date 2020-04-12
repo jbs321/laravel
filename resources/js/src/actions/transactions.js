@@ -19,7 +19,7 @@ export function deleteTransaction (oldData) {
 }
 
 export function updateTransaction (data) {
-    return dispatchHelper(axios.put(`/api/transaction/${data.id}`, data), TRANSACTION__DELETE)
+    return dispatchHelper(axios.put(`/api/transaction/${data.id}`, data), TRANSACTION__UPDATE)
 }
 
 export function updateTransactionRetailer (retailer, selectedRows) {

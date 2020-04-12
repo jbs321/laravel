@@ -99,7 +99,7 @@ class RetailerList extends React.Component {
     }
 
     renderChips = (rowData) => {
-        if (rowData.categories === undefined) {
+        if (!rowData.categories) {
             return null
         }
 

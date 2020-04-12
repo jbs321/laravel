@@ -12,13 +12,17 @@ class RetailerSelect extends React.Component {
     }
 
     render () {
-        const { retailers, handleChange } = this.props
-        return <SimpleSelect handleChange={handleChange} name="retailers" id="retailers" options={_.values(retailers)} label={'Retailers'}/>
+        const { retailers, selected, handleChange } = this.props
+        return <SimpleSelect handleChange={handleChange} selected={selected} name="retailers" id="retailers" options={_.values(retailers)} label={'Retailers'}/>
     }
 }
 
 RetailerSelect.propTypes = {
     handleChange: PropTypes.func.isRequired,
+    selected: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string,
+    ]),
 }
 
 export default connect(state => state, { fetchRetailer })(RetailerSelect)

@@ -11,6 +11,8 @@ import {
 import { fetchRetailer } from 'actions/retailers'
 import MTableListToolbar from './MaterialTable/MtableListToolbar'
 import RetailerSelect from './Form/RetailerSelect'
+import Chip from '@material-ui/core/Chip'
+import MultipleSelectCategories from './Form/MultipleSelectCategories'
 
 class TransactionList extends React.Component {
     state = {
@@ -25,8 +27,12 @@ class TransactionList extends React.Component {
             this.setState({ isLoading: true })
 
             this.props.fetchTransaction().then(() => {
-                this.setState({ isLoading: false })
+                this.props.fetchRetailer().then(() => {
+                    this.setState({ isLoading: false })
+                })
             })
+
+
         }
     }
 
@@ -70,18 +76,38 @@ class TransactionList extends React.Component {
         return <MTableListToolbar {...props} selectedRowsComponent={select}/>
     }
 
-    render () {
-        let lookup = {}
-        const { retailers, transactions } = this.props
+    renderChips = (rowData) => {
+        const { retailer } = rowData
 
-        _.each(retailers, (retailer) => {
-            lookup[retailer.id] = retailer.name
-        })
+        if (!retailer) return null
+
+        return <div style={{ display: 'flex', flexWrap: 'wrap', }}>
+            <Chip key={retailer.id} label={retailer.name} style={{ margin: 2 }}/>
+        </div>
+    }
+
+    renderSelect = ({ value = '', rowData, columnDef, onRowDataChange }) => {
+        return <RetailerSelect
+            selected={value ? value : ''}
+            handleChange={value => {
+                const data = { ...rowData }
+                data[columnDef.field] = value
+                onRowDataChange(data)
+            }}/>
+    }
+
+    render () {
+        const { retailers, transactions } = this.props
 
         const columns = [
             { title: 'Account Type', field: 'account_type' },
             { title: 'Transaction Date', field: 'transaction_date' },
-            { title: 'Retailer', field: 'retailer_id', lookup: lookup },
+            {
+                title: 'Retailer', field: 'retailer_id',
+                lookup: retailers,
+                editComponent: this.renderSelect,
+                render: this.renderChips
+            },
             { title: 'Description 1', field: 'description_1', cellStyle: { fontSize: 10, minWidth: 300, } },
             { title: 'CAD', field: 'cad' },
         ]

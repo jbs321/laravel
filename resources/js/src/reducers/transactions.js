@@ -18,8 +18,8 @@ export default function (state = {}, {type, payload}) {
             return newState
 
         case TRANSACTION__UPDATE:
-            // newState = _.omit(newState, [payload])
-            return state
+            newState[payload.id] = payload;
+            return newState
         default:
             return state
     }

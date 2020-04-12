@@ -68,6 +68,8 @@ class RBCTransactionController
         $transaction->fill($request->all());
         $transaction->save();
 
+        $transaction->retailer;
+
         return $transaction;
     }
 
