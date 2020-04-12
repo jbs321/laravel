@@ -1,4 +1,5 @@
 import {
+    TRANSACTION__CREATE,
     TRANSACTION__DELETE,
     TRANSACTION__FETCH,
     TRANSACTION__UPDATE,
@@ -18,6 +19,10 @@ export default function (state = {}, {type, payload}) {
             return newState
 
         case TRANSACTION__UPDATE:
+            newState[payload.id] = payload;
+            return newState
+
+        case TRANSACTION__CREATE:
             newState[payload.id] = payload;
             return newState
         default:

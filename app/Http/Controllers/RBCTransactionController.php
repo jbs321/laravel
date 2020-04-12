@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * TODO:: Requires Validation
  * Class RBCTransactionController
  * @package App\Http\Controllers
  */
@@ -62,7 +61,7 @@ class RBCTransactionController
             'description_2' => "string|nullable|max:255",
             'cad' => "string|max:255",
             'usd' => "string|nullable|max:255",
-//            'retailer_id' => "integer",
+            'retailer_id' => "integer|exists:retailers,id",
         ]);
 
         $transaction->fill($request->all());
@@ -75,9 +74,23 @@ class RBCTransactionController
 
     public function create(Request $request)
     {
+        $request->validate([
+            'account_type' => "required|string|max:255",
+            'account_number' => "string|max:255",
+            'transaction_date' => "string|max:20",
+            'cheque_number' => "string|nullable|max:255",
+            'description_1' => "required|string|min:1|max:255",
+            'description_2' => "string|nullable|max:255",
+            'cad' => "string|max:255",
+            'usd' => "string|nullable|max:255",
+            'retailer_id' => "integer|exists:retailers,id",
+        ]);
+
         $transaction = new RbcTransaction();
         $transaction->fill($request->all());
         $transaction->save();
+        $transaction->retailer;
+
         return new JsonResponse($transaction);
     }
 

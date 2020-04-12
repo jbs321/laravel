@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/api/retailers/delete', 'RetailerController@bulkDelete');
 
     Route::get('/api/transaction', 'RBCTransactionController@index');
+    Route::post('/api/transaction', 'RBCTransactionController@create');
     Route::put('/api/transaction/{transaction}', 'RBCTransactionController@update');
     Route::post('/api/transaction/delete/{transaction}', 'RBCTransactionController@delete');
     Route::post('/api/transaction/overview/{year}', 'LogController@showOverview');
