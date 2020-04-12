@@ -34,9 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/api/retailers/delete', 'RetailerController@bulkDelete');
 
     Route::get('/api/transaction', 'RBCTransactionController@index');
-    Route::post('/api/transaction/{transaction}', 'RBCTransactionController@update');
-    Route::put('/api/transaction', 'RBCTransactionController@update');
+    Route::put('/api/transaction/{transaction}', 'RBCTransactionController@update');
+    Route::post('/api/transaction/delete/{transaction}', 'RBCTransactionController@delete');
     Route::post('/api/transaction/overview/{year}', 'LogController@showOverview');
+
+    //Mass Assign
+    Route::put('/api/transactions/retailer/{retailer}', 'RBCTransactionController@updateTransactionRetailers');
 
     //Navigate to react router
     Route::get('/{any}', function () {

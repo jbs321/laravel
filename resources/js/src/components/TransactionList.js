@@ -1,58 +1,67 @@
 import React from 'react'
 import MaterialTable from 'material-table'
 import { connect } from 'react-redux'
-import { fetchTransaction, updateTransaction } from 'actions/transactions'
+import {
+    fetchTransaction,
+    updateTransactionRetailer,
+    deleteTransaction,
+    createTransaction,
+    updateTransaction
+} from 'actions/transactions'
 import { fetchRetailer } from 'actions/retailers'
-import TransactionListToolbar from './TransactionListToolbar'
 import MTableListToolbar from './MaterialTable/MtableListToolbar'
-import CategorySelect from './Form/CategorySelect'
 import RetailerSelect from './Form/RetailerSelect'
-
-const fakePromise = new Promise(resolve => {
-    setTimeout(() => {
-        resolve()
-    }, 600)
-})
 
 class TransactionList extends React.Component {
     state = {
+        isLoading: false,
         multiSelect: {
             retailerId: '',
         }
     }
 
     componentDidMount () {
-        if(_.isEmpty(this.props.retailers)) {
-            this.props.fetchRetailer()
-        }
+        if (_.isEmpty(this.props.transactions)) {
+            this.setState({ isLoading: true })
 
-        if(_.isEmpty(this.props.transactions)) {
-            this.props.fetchTransaction()
+            this.props.fetchTransaction().then(() => {
+                this.setState({ isLoading: false })
+            })
         }
     }
 
     handleUpdate = (newData) => {
-        return fakePromise
+        return this.props.updateTransaction(newData)
     }
 
     handleCreate = (newData) => {
-        return fakePromise
+        return this.props.createTransaction(newData)
     }
 
     handleDelete = (oldData) => {
-        return fakePromise
-    }
-
-    submitMultiUpdate = (evt, data) => {
-        const {retailers} = this.props;
-        const {retailerId} = this.state.multiSelect;
-        this.props.updateTransaction(retailers[retailerId], data, () => {
-            this.props.fetchTransaction();
-        });
+        return this.props.deleteTransaction(oldData)
     }
 
     handleMultipleUpdate = (retailerId) => {
         this.setState({ multiSelect: { retailerId: retailerId } })
+    }
+
+    submitMultiUpdate = (evt, data) => {
+        const { retailers, updateTransactionRetailer } = this.props
+        const { retailerId } = this.state.multiSelect
+
+        this.setState({ isLoading: true })
+        updateTransactionRetailer(retailers[retailerId], data).then(() => {
+            this.setState({ isLoading: false })
+        })
+    }
+
+    submitRefresh = () => {
+        this.setState({ isLoading: true })
+
+        this.props.fetchTransaction().then(() => {
+            this.setState({ isLoading: false })
+        })
     }
 
     renderToolbar = (props) => {
@@ -74,7 +83,8 @@ class TransactionList extends React.Component {
             { title: 'Transaction Date', field: 'transaction_date' },
             { title: 'Retailer', field: 'retailer_id', lookup: lookup },
             { title: 'Description 1', field: 'description_1', cellStyle: { fontSize: 10, minWidth: 300, } },
-            { title: 'CAD', field: 'cad' },]
+            { title: 'CAD', field: 'cad' },
+        ]
 
         return (<MaterialTable
             components={{ Toolbar: this.renderToolbar }}
@@ -84,8 +94,8 @@ class TransactionList extends React.Component {
                 selection: true,
                 pageSize: 10
             }}
-            data={_.flatMap(transactions)}
-
+            isLoading={this.state.isLoading}
+            data={_.values(transactions)}
             editable={{
                 onRowAdd: this.handleCreate,
                 onRowUpdate: this.handleUpdate,
@@ -97,7 +107,7 @@ class TransactionList extends React.Component {
                     icon: 'refresh',
                     tooltip: 'Refresh Data',
                     isFreeAction: true,
-                    onClick: this.props.fetchTransaction,
+                    onClick: this.submitRefresh,
                 },
                 {
                     tooltip: 'Update Rows',
@@ -124,4 +134,11 @@ function mapStateToProps (state) {
     return state
 }
 
-export default connect(mapStateToProps, { fetchTransaction, fetchRetailer, updateTransaction })(TransactionList)
+export default connect(mapStateToProps, {
+    fetchTransaction,
+    fetchRetailer,
+    updateTransactionRetailer,
+    deleteTransaction,
+    createTransaction,
+    updateTransaction
+})(TransactionList)
